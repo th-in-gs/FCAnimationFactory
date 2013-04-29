@@ -71,6 +71,9 @@ NSString * const kFCEasingAnimationNameElasticEaseOut =     @"elasticEaseOut";
 NSString * const kFCEasingAnimationNameBackEaseIn =         @"backEaseIn";
 NSString * const kFCEasingAnimationNameBackEaseOut =        @"backEaseOut";
 
+NSString * const kFCEasingAnimationNameBounceEaseIn =       @"bounceEaseIn";
+NSString * const kFCEasingAnimationNameBounceEaseOut =      @"bounceEaseOut";
+
 
 @implementation FCBasicAnimationFactory
 @synthesize normalizedValues = _normalizedValues;
@@ -141,7 +144,23 @@ NSString * const kFCEasingAnimationNameBackEaseOut =        @"backEaseOut";
             float(^elasticEaseOut)(float)   = ^(float x){return sinf(-13.f * M_PI_2 * (x+1.f)) * powf(2.f, -10.f *x) + 1;};
             float(^backEaseIn)(float)       = ^(float x){return x*x*x - x * sinf(x * M_PI);};
             float(^backEaseOut)(float)      = ^(float x){float f = (1.f-x); return 1.f - (f*f*f - f * sinf(f * M_PI));};
-
+            
+            float(^bounceEaseOut)(float) = ^(float x) {
+                if (x < 1.f/2.75f) {
+                    return 7.5625f*x*x;
+                } else if (x < 2.0f/2.75f) {
+                    x -= 1.5f/2.75f;
+                    return 7.5625f*x*x + .75f;
+                } else if (x < 2.5f/2.75f) {
+                    x -= 2.25f/2.75f;
+                    return 7.5625f*x*x + .9375f;
+                } else {
+                    x -= 2.625f/2.75f;
+                    return 7.5625f*x*x + .984375f;
+                }
+            };
+            float(^bounceEaseIn)(float) = ^(float x) { return 1.0f - bounceEaseOut(x); };
+            
             
             /* one step animations */
             FCBasicAnimationFactory* factory = [[FCBasicAnimationFactory alloc] init];
@@ -199,6 +218,12 @@ NSString * const kFCEasingAnimationNameBackEaseOut =        @"backEaseOut";
             [dict setObject:[factory copy] forKey:kFCEasingAnimationNameBackEaseIn];
             factory.timingBlocks = [NSArray arrayWithObject:backEaseOut];
             [dict setObject:[factory copy] forKey:kFCEasingAnimationNameBackEaseOut];
+            
+            factory.timingBlocks = [NSArray arrayWithObject:bounceEaseIn];
+            [dict setObject:[factory copy] forKey:kFCEasingAnimationNameBounceEaseIn];
+            factory.timingBlocks = [NSArray arrayWithObject:bounceEaseOut];
+            [dict setObject:[factory copy] forKey:kFCEasingAnimationNameBounceEaseOut];
+
             
             /* two steps animations */
             factory.normalizedValues = [NSArray arrayWithObjects:

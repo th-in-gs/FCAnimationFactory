@@ -84,4 +84,8 @@ extern NSString * const kFCEasingAnimationNameElasticEaseOut;
 extern NSString * const kFCEasingAnimationNameBackEaseIn;
 extern NSString * const kFCEasingAnimationNameBackEaseOut;
 
+extern NSString * const kFCEasingAnimationNameBounceEaseIn;
+extern NSString * const kFCEasingAnimationNameBounceEaseOut;
+
+
 @end
